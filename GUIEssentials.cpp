@@ -11,6 +11,7 @@ using namespace GUIEssentials;
 using namespace std;
 
 bool Settings::LoadFile(String^ file){
+	_isSaved = true;
 	_fileName = file;
 
 	ofstream fo(StringToStd(file), fstream::app);
@@ -31,7 +32,12 @@ bool Settings::LoadFile(String^ file){
 		String^ Key = stdToString(key);
 		String^ Value = stdToString(value);
 
-		SetValue(Key, Value);
+		if (_parameters->ContainsKey(Key)){
+			_parameters[Key] = Value;
+		}
+		else{
+			_parameters->Add(Key, Value);
+		}
 
 	}
 
@@ -62,6 +68,8 @@ bool Settings::SaveCurrent()
 		}
 	}
 
+	_isSaved = true;
+
 	fo.close();
 	return true;
 }
@@ -85,6 +93,7 @@ String^ Settings::TryGetString(String^ key){
 
 
 void Settings::SetValue(String^ key, String^ value){
+	_isSaved = false;
 	if (_parameters->ContainsKey(key)){
 		_parameters[key] = value;
 	}
@@ -111,4 +120,18 @@ static String^ GUIEssentials::stdToString(string s){
 static string GUIEssentials::StringToStd(String^ s){
 	return msclr::interop::marshal_as< string >(s);
 
+}
+
+
+DialogResult MessageShow::ShowOk(String^ Msg, String^ Title){
+	return MessageBox::Show(Title, Msg, MessageBoxButtons::OK);
+}
+
+
+DialogResult MessageShow::ShowYesNo(String^ Msg, String^ Title){
+	return MessageBox::Show(Title, Msg, MessageBoxButtons::YesNo);
+}
+
+DialogResult MessageShow::ShowYesNoCancel(String^ Msg, String^ Title){
+	return MessageBox::Show(Title, Msg, MessageBoxButtons::YesNoCancel);
 }
