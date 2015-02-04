@@ -10,3 +10,7 @@ To use my files:
   Step 4. Implement it in your program.
 
 Feel free to contribute.
+
+TODO:
+  Documentation.
+  More features?
