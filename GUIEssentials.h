@@ -1,8 +1,7 @@
-// GUIEssentials.h
-
 #pragma once
 
 #include <string>
+#include <msclr/marshal_cppstd.h>
 
 using namespace System;
 using namespace System::Collections;
@@ -28,6 +27,7 @@ namespace GUIEssentials {
 		static String^ TryGetString(String^ key);
 
 		static void SetValue(String^ key, String^ value);
+		static bool HasKey(String^ key);
 
 		static ICollection^ GetKeys();
 		static ICollection^ GetValues();
@@ -43,9 +43,13 @@ namespace GUIEssentials {
 		/** Shows Message with 2 buttons: Yes/No;*/
 		static DialogResult ShowYesNo(String^ Msg, String^ Title);
 		/** Shows Message with 3 buttons: Yes/No/Cancel;*/
-		static DialogResult ShowYesNoCancel(String^ Msg, String^ Title)
+		static DialogResult ShowYesNoCancel(String^ Msg, String^ Title);
 	};
 
-	static String^ stdToString(string s);
-	static string StringToStd(String^ s);
+	static String^ stdToString(string s){
+		return msclr::interop::marshal_as< String^ >(s);
+	}
+	static string StringToStd(String^ s){
+		return msclr::interop::marshal_as< string >(s);
+	}
 }

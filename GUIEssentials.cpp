@@ -1,9 +1,4 @@
-// This is the main DLL file.
-
-#pragma once
-
 #include <fstream>
-#include <msclr/marshal_cppstd.h>
 
 #include "GUIEssentials.h"
 
@@ -102,6 +97,10 @@ void Settings::SetValue(String^ key, String^ value){
 	}
 }
 
+bool Settings::HasKey(String^ key){
+	return _parameters->ContainsKey(key);
+}
+
 
 
 ICollection^ Settings::GetKeys(){
@@ -109,17 +108,6 @@ ICollection^ Settings::GetKeys(){
 }
 ICollection^ Settings::GetValues(){
 	return _parameters->Values;
-}
-
-
-
-static String^ GUIEssentials::stdToString(string s){
-	return msclr::interop::marshal_as< String^ >(s);
-}
-
-static string GUIEssentials::StringToStd(String^ s){
-	return msclr::interop::marshal_as< string >(s);
-
 }
 
 
