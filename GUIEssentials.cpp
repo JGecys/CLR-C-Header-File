@@ -3,6 +3,7 @@
 #include "GUIEssentials.h"
 
 using namespace GUIEssentials;
+using namespace System;
 using namespace std;
 
 bool Settings::LoadFile(String^ file){
@@ -71,15 +72,37 @@ bool Settings::SaveCurrent()
 
 
 int Settings::TryGetInt(String^ key){
-	int value;
-	int::TryParse((String^)_parameters[key], value);
-	return value;
+	try{
+		int value = int::Parse((String^)_parameters[key]);
+		return value;
+	}
+	catch (ArgumentNullException^ nll){
+		throw nll;
+	}
+	catch (FormatException^ format){
+		throw format;
+	}
+	catch (OverflowException^ overflow){
+		throw overflow;
+	}
+	return 0;
 
 }
 float Settings::TryGetFloat(String^ key){
-	float value;
-	float::TryParse((String^)_parameters[key], value);
-	return value;
+	try{
+		float value = float::Parse((String^)_parameters[key]);
+		return value;
+	}
+	catch (ArgumentNullException^ nll){
+		throw nll;
+	}
+	catch (FormatException^ format){
+		throw format;
+	}
+	catch (OverflowException^ overflow){
+		throw overflow;
+	}
+	return 0;
 }
 String^ Settings::TryGetString(String^ key){
 	return (String^) _parameters[key];
