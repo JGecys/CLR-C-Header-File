@@ -111,15 +111,24 @@ ICollection^ Settings::GetValues(){
 }
 
 
-DialogResult MessageShow::ShowOk(String^ Msg, String^ Title){
-	return MessageBox::Show(Title, Msg, MessageBoxButtons::OK);
+DialogResult MessageShow::Show(String^ Msg,
+	String^ Title,
+	MessageBoxButtons buttons,
+	MessageBoxIcon icon){
+	return MessageBox::Show(Msg, Title, buttons, icon);
 }
 
-
-DialogResult MessageShow::ShowYesNo(String^ Msg, String^ Title){
-	return MessageBox::Show(Title, Msg, MessageBoxButtons::YesNo);
+DialogResult MessageShow::Show(String^ Msg){
+	return MessageShow::Show(Msg, "Info", MessageBoxButtons::OK, MessageBoxIcon::None);
 }
 
-DialogResult MessageShow::ShowYesNoCancel(String^ Msg, String^ Title){
-	return MessageBox::Show(Title, Msg, MessageBoxButtons::YesNoCancel);
+DialogResult MessageShow::Show(String^ Msg,
+	String^ Title){
+	return MessageShow::Show(Msg, Title, MessageBoxButtons::OK, MessageBoxIcon::None);
+}
+
+DialogResult MessageShow::Show(String^ Msg,
+	String^ Title,
+	MessageBoxButtons buttons){
+	return MessageShow::Show(Msg, Title, buttons, MessageBoxIcon::None);
 }

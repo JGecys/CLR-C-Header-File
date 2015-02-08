@@ -38,12 +38,20 @@ namespace GUIEssentials {
 
 	public ref class MessageShow{
 	public:
-		/** Shows Message with Single button OK and no callback*/
-		static DialogResult ShowOk(String^ Msg, String^ Title);
-		/** Shows Message with 2 buttons: Yes/No;*/
-		static DialogResult ShowYesNo(String^ Msg, String^ Title);
-		/** Shows Message with 3 buttons: Yes/No/Cancel;*/
-		static DialogResult ShowYesNoCancel(String^ Msg, String^ Title);
+		/** Shows generalMessage*/
+		static DialogResult Show(String^ Msg,
+			String^ Title,
+			MessageBoxButtons buttons,
+			MessageBoxIcon icon);
+
+		static DialogResult Show(String^ Msg);
+
+		static DialogResult Show(String^ Msg,
+			String^ Title);
+
+		static DialogResult Show(String^ Msg,
+			String^ Title,
+			MessageBoxButtons buttons);
 	};
 
 	static String^ stdToString(string s){
