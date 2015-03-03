@@ -1,6 +1,9 @@
 # CLR-C-Header-File
 Settings/MessageBox implementation.
 
+new:
+	Dynamic array
+
 To use my files:
   Step 1. Copy them to your CLR Project.
   Step 2. In project right click on Headers folder and select Add->Add existing(Header):
