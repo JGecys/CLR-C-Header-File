@@ -161,10 +161,23 @@ DialogResult MessageShow::Show(String^ Msg,
 
 #pragma region DinaminisMasyvas
 
-GUIEssentials::DinaminisMasyvas::DinaminisMasyvas();
-GUIEssentials::DinaminisMasyvas::DinaminisMasyvas(Object O[], size_type n);
-GUIEssentials::DinaminisMasyvas::DinaminisMasyvas(const DinaminisMasyvas & other);
-GUIEssentials::DinaminisMasyvas::~DinaminisMasyvas();
+GUIEssentials::DinaminisMasyvas::DinaminisMasyvas() : n(0), nMax(Cd), Matrica(NULL){
+	Matrica = new Object[nMax];
+}
+GUIEssentials::DinaminisMasyvas::DinaminisMasyvas(Object * O, size_type n), n(n), nMax(n){
+	Matrica = O;
+}
+GUIEssentials::DinaminisMasyvas::DinaminisMasyvas(const DinaminisMasyvas & other){
+	n = other.n;
+	nMax = other.nMax;
+	Masyvas = new Object[nMax];
+	for (size_type i = 0; i < n; i++){
+		Masyvas[i] = other.Masyvas[i];
+	}
+}
+GUIEssentials::DinaminisMasyvas::~DinaminisMasyvas(){
+	Isvalyti();
+}
 
 template<class Object>
 void GUIEssentials::DinaminisMasyvas<Object>::Isvalyti(){
