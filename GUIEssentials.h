@@ -10,15 +10,16 @@ using namespace std;
 
 namespace GUIEssentials {
 
-	template<class Object>
-	public class DinaminisMasyvas{
+	/**
+	* @typedef	unsigned int size_type
+	*
+	* @brief	Dinaminio masyvo dydzio tipas
+	*/
+	typedef unsigned int size_type;
+
+	template < class Ob >
+	class DinaminisMasyvas{
 	public:
-		/**
-		 * @typedef	unsigned int size_type
-		 *
-		 * @brief	Dinaminio masyvo dydzio tipas
-		 */
-		typedef unsigned int size_type;
 		/** @brief	Dinaminis masyvas didinamas po Cd elementu. */
 		const static size_type Cd = 10;
 	private:
@@ -29,10 +30,10 @@ namespace GUIEssentials {
 		 *
 		 * @return	Objekto indexas.
 		 */
-		size_type RastiOjektoIndeksa(const Object & obj);
+		size_type RastiOjektoIndeksa(const Ob & obj);
 	protected:
 		/** @brief	Dinaminis masyvas. */
-		Object *Masyvas;
+		Ob *Masyvas;
 		/** @brief	Dinaminio masyvo dydziai. */
 		size_type n, nMax;
 	public:
@@ -40,10 +41,12 @@ namespace GUIEssentials {
 		/**
 		 * @brief	Tuscias Konstruktorius.
 		 */
-		DinaminisMasyvas();
+		DinaminisMasyvas() : n(0), nMax(Cd), Masyvas(NULL){
+			Masyvas = new Ob[nMax];
+		}
 
 		/**
-		 * @fn	DinaminisMasyvas::DinaminisMasyvas(Object *O, size_type n);
+		 * @fn	DinaminisMasyvas::DinaminisMasyvas(Ob *O, size_type n);
 		 *
 		 * @brief	Konstruktorius.
 		 *
@@ -51,7 +54,9 @@ namespace GUIEssentials {
 		 * @param	n		 	Dinaminio masyvo dydis.
 		 */
 
-		DinaminisMasyvas(Object *O, size_type n);
+		DinaminisMasyvas(Ob *O, size_type n) : n(n), nMax(n){
+			Masyvas = O;
+		}
 
 		/**
 		 * @brief	Kopijavimo konstruktorius.
@@ -59,42 +64,92 @@ namespace GUIEssentials {
 		 * @param	other	Objektas, kuri kopijuoja.
 		 */
 
-		DinaminisMasyvas(const DinaminisMasyvas & other);
+		DinaminisMasyvas(const DinaminisMasyvas & other){
+			n = other.n;
+			nMax = other.nMax;
+			Masyvas = new Ob[nMax];
+			for (size_type i = 0; i < n; i++){
+				Masyvas[i] = other.Masyvas[i];
+			}
+		}
 
 		/**
 		 * @brief	Destruktorius.
 		 */
 
-		~DinaminisMasyvas();
+		~DinaminisMasyvas(){
+			Isvalyti();
+		}
 
 		/**
 		 * @brief	Atlaisvina dinaminio masyvo atminti.
 		 */
-		void Isvalyti();
+		void Isvalyti(){
+			n = nMax = 0;
+			if (Masyvas)
+				delete[] Masyvas;
+			Masyvas = NULL;
+		}
 		/**
 		 * @brief	Padidina/sumazina dinamini masyva.
 		 *
 		 * @param	dydis	Dinaminio masyvo dydis.
 		 */
-		void KeistiDydi(size_type dydis);
+		void KeistiDydi(size_type dydis){
+			if (dydis > nMax){
+				Ob * naujasMasyvas = new Ob[dydis];
+				for (size_type i = 0; i < n; i++){
+					naujasMasyvas[i] = Masyvas[i];
+				}
+				delete[] Masyvas;
+				Masyvas = naujasMasyvas;
+			}
+			else{
+				Ob * naujasMasyvas = new Ob[dydis];
+				for (size_type i = 0; i < dydis; i++){
+					naujasMasyvas[i] = Masyvas[i];
+				}
+				delete[] Masyvas;
+				Masyvas = naujasMasyvas;
+				if (n > dydis){
+					n = dydis;
+				}
+			}
+			nMax = dydis;
+		}
 
 		/**
 		 * @brief	Grazina rodykle i pirma masyvo elementa.
 		 *
 		 * @return	null jei tuscia, kitu atveju pirmas masyvo objektas.
 		 */
-		Object * Pradzia();
+		Ob * Pradzia(){
+			if (n == 0){
+				return NULL;
+			}
+			Ob * rodykle;
+			rodykle = &Masyvas[0];
+			return rodykle;
+		}
 		/**
 		 * @brief	Grazina rodykle i paskutini masyvo elementa.
 		 *
 		 * @return	null jei tuscia, kitu atveju paskutinis masyvo objektas.
 		 */
-		Object * Pabaiga();
-
+		Ob * Pabaiga(){
+			if (n == 0){
+				return NULL;
+			}
+			Ob * rodykle;
+			rodykle = &Masyvas[n - 1];
+			return rodykle;
+		}
 		/**
 		 * @return	Dinaminio masyvo dydi..
 		 */
-		size_type ImtiN() const;
+		size_type ImtiN() const{
+			return n;
+		}
 
 		/**
 		 * @brief	Grazina i-taji elementa;
@@ -103,16 +158,19 @@ namespace GUIEssentials {
 		 *
 		 * @return	i-taji elementa.
 		 */
-
-		Object Imti(size_type i) const;
+		Ob Imti(size_type i) const{
+			return Masyvas[i];
+		}
 
 		/**
 		 * @brief	Prideda nauja objekta
 		 *
 		 * @param	obj	Objektas, kuri ideda.
 		 */
-
-		void Deti(Object obj);
+		void Deti(Ob obj){
+			if (n == nMax) KeistiDydi(nMax + Cd);
+			Masyvas[n++] = obj;
+		}
 
 		/**
 		 * @brief	Iterptia objekta i dinamini masyva.
@@ -120,24 +178,43 @@ namespace GUIEssentials {
 		 * @param	i  	I kuria vieta iterpiamos objektas.
 		 * @param	obj	Iterpiamas objektas.
 		 */
-
-		void Iterpti(size_type i, Object obj);
+		void Iterpti(size_type i, Ob obj){
+			if (n == nMax) KeistiDydi(nMax + Cd);
+			if (n == 0) return;
+			for (size_type j = n; j >= i; j--){
+				Masyvas[j + 1] = Masyvas[j];
+			}
+			Masyvas[i] = obj;
+		}
 
 		/**
 		 * @brief	Istrina objekta i pozicijoje
 		 *
 		 * @param	i	Objekto pozicija
 		 */
-
-		void Istrynti(size_type i);
+		void Istrynti(size_type i){
+			if (n == 1){
+				Isvalyti();
+				return;
+			}
+			if (n - nMax < Cd) KeistiDydi(nMax - Cd);
+			if (n == 0) return;
+			n--;
+			for (size_type j = i; j < n; j++){
+				Masyvas[j] = Masyvas[j + 1];
+			}
+		}
 
 		/**\
 		 * @brief	Istrina objekta
 		 *
 		 * @param	obj Objektas.
 		 */
-
-		void Istrynti(Object obj);
+		void Istrynti(Ob obj){
+			size_type i = RastiOjektoIndeksa(obj);
+			if (i > -1)
+				Istrynti(i);
+		}
 
 		/**
 		 * @brief	Masyvo operatorius
@@ -146,8 +223,9 @@ namespace GUIEssentials {
 		 *
 		 * @return	The indexed value.
 		 */
-
-		Object & operator [] (const size_type & i);
+		Ob & operator [] (const size_type & i){
+			return Masyvas[i];
+		}
 
 		/**
 		 * @brief	Priskyrimo operatorius
@@ -156,8 +234,16 @@ namespace GUIEssentials {
 		 *
 		 * @return	Objekto kopija
 		 */
-
-		DinaminisMasyvas<Object> & operator = (const DinaminisMasyvas<Object> & other);
+		DinaminisMasyvas<Ob> & operator = (const DinaminisMasyvas<Ob> & other){
+			Isvalyti();
+			n = other.n;
+			nMax = other.nMax;
+			Masyvas = new Ob[nMax];
+			for (size_type i = 0; i < n; i++){
+				Masyvas[i] = other.Masyvas[i];
+			}
+			return *this;
+		}
 
 		/**
 		 * @brief	Sujungia 2  to pacio tipo dinaminius masyvus
@@ -166,9 +252,21 @@ namespace GUIEssentials {
 		 *
 		 * @return	Sujungtas masyvas.
 		 */
+		DinaminisMasyvas<Ob> operator + (const DinaminisMasyvas<Ob> & other){
+			size_type Dydis = nMax + other.nMax
+				Ob* naujas = new Ob[Dydis];
+			for (size_type i = 0; i < n; i++){
+				naujas[i] = Masyvas[i];
+			}
 
-		DinaminisMasyvas operator + (const DinaminisMasyvas<Object> & other);
-	}
+			for (size_type i = 0; i < other.n; i++){
+				naujas[n + i] = other.Masyvas[i];
+			}
+
+			DinaminisMasyvas<Ob> Mas(naujas, Dydis);
+			return Mas;
+		}
+	};
 
 	public ref class Settings
 	{
